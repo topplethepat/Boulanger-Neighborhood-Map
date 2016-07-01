@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ 	<style>
+ 	html,
+ 	body {
+ 		font-family: Arial, sans-serif;
+ 		height: 100%;
+ 		margin:0;
+ 		padding:0;
+
+ 	}
+ 	#map {
+    
+  height: 100%;
+   }
+   #pano {
+   	width: 200px;
+   	height: 200px;
+   }
+   .text {
+   	font-size: 12px;
+   }
+ 	</style>
+ </head>
+ <body>
+ 	<div id='map'></div>
+ 	<script>
+ 	var map;
+ 	var markers = [];
+ 	function initMap(){
+ 	  var styles = [
+    {
+        "featureType": "administrative",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#444444"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#f2f2f2"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#b4f06d"
+            },
+            {
+                "saturation": "-40"
+            },
+            {
+                "lightness": "58"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural.landcover",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape.natural.terrain",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "all",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 45
+            },
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#f4f2cd"
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    }
+]
+ 	
+       //constructor creates a new map - only center and zoom required
+       	map = new google.maps.Map(document.getElementById('map'), {
+       		center: {lat: 48.8822277, lng: 2.3287013},
+       		styles: styles,
+       		zoom: 13,
+       		mapTypeControl: false
+
+       	});
+      	   	
+
+       	var locations = [
+
+       	{title: 'Paroisse La Sainte Trinite',location: {lat: 48.8773, lng: 2.3314}},
+       	
+       	{title: 'Boulanger residence at 36 rue Ballu',location: {lat: 48.8822277, lng: 
+       		2.3287013}},
+       	{title: 'Conservatoire de Paris', location: {lat:48.8882960, lng: 2.3913600}}
+       		
+       	];
+
+       	var largeInfowindow = new google.maps.InfoWindow();
+       	//this uses the location array to create an array of markers
+       	for (var i=0; i< locations.length; i++){
+       		//get the position from the location array.
+       	var position = locations[i].location;
+       	var title = locations[i].title;
+      
+       	//create a marker per location, and put into the markers array.
+       	var marker = new google.maps.Marker ({
+       		map: map,
+       		position: position,
+       		title: title,
+       		animation: google.maps.Animation.DROP,
+       		id: i
+       	});
+       
+       	//push the marker to the array of markers.
+       	markers.push(marker);
+       	
+       	//create an onclick event to open an infowindow at each marker.
+       	marker.addListener('click', function(){
+       		populateInfoWindow(this, largeInfowindow);
+       	});
+     }  	
+       
+       	function populateInfoWindow(marker, infowindow) {
+       		//check to make sure infowindow is not already opened on this marker
+       		if (infowindow.marker != marker) {
+       			infowindow.marker = marker;
+       			infowindow.setContent('');
+       			infowindow.open(map, marker);
+       			//make sure the marker property is cleared if infowindow is closed.
+       			infowindow.addListener('closeclick',function(){
+       				infowindow.setMarker(null);
+       			});
+       			var streetViewService = new google.maps.StreetViewService();
+       			var radius = 30;
+       			function getStreetView(data, status){
+       			if (status == google.maps.StreetViewStatus.OK) {
+       				var nearStreetViewLocation = data.location.latLng;
+       				var heading = google.maps.geometry.spherical.computeHeading(
+       					nearStreetViewLocation, marker.position);
+       				infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
+       				var panoramaOptions = {
+       					position: nearStreetViewLocation,
+       					pov: {
+       						heading: heading,
+       						pitch: 30
+
+       					}
+       				};
+       				var panorama = new google.maps.StreetViewPanorama(
+       					document.getElementById('pano'), panoramaOptions);
+       			} else {
+       				infowindow.setContent('<div>' + marker.title + '</div>' +
+       					'<div>No Street View Found</div>')
+       			}
+       		}
+       		//use streetview service to get the closest streetview image 
+       		streetViewService.getPanoramaByLocation(marker.position, radius, getStreetView);
+       		//open the infowindow on the correct marker.
+       		infowindow.open(map, marker);
+       	}   	
+       	
+       }
+    }  
+       </script> 
+ 		
+ 	  <script async defer src="https://maps.googleapis.com/maps/api/js?
+ 	  key=AIzaSyAGdteSja8j88wCesu91hTvqM9LAY7T6_I&libraries=
+ 	  geometry&v=3&callback=initMap">
+ 	    
+  </script>
+ </body>
+ </html> 
