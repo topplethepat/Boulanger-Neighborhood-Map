@@ -1,2 +1,3 @@
 # Boulanger-Neighborhood-Map
 This is a map showing significant places in the lives of Nadia and Lili Boulanger, French composers from the 20th Century.
+I've stylized the standard Google map using some colors I thought the Boulanger sisters would like! The map shows a streetview of three places: the family home at 36 rue Ballu, the family parish church of Sainte Trinite, designed by architect Theodore Ballu,and the Paris Conservatory where both sisters studied. A special mass is celebrated at Sainte Trinite in honor of the sisters each March 15 (the anniversary of Lili's death) with music written by both women.
